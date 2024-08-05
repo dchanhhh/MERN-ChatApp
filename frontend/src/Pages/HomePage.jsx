@@ -13,12 +13,20 @@ import {
 import logo from "../assets/logo.png";
 import Login from "../components/Authentication/Login";
 import SignUp from "../components/Authentication/SignUp";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const HomePage = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("userInfo"));
+    if (user) navigate("/chats");
+  }, [navigate]);
   return (
     <Container maxW={"xl"} centerContent>
       <Box
-        d={"flex"}
+        display={"flex"}
         alignItems={"center"}
         justifyContent={"center"}
         p={"3"}

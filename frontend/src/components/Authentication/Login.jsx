@@ -12,6 +12,7 @@ import { BiSolidShow, BiSolidHide } from "react-icons/bi";
 import { useToast } from "@chakra-ui/react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ChatState } from "../../Context/ChatProvider";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -22,6 +23,7 @@ const Login = () => {
   const toast = useToast();
   const navigate = useNavigate();
   const handleClick = () => setShow(!show);
+  const { setUser } = ChatState();
 
   const SubmitHandler = async () => {
     setLoading(true);
@@ -56,12 +58,11 @@ const Login = () => {
         isClosable: true,
         position: "bottom",
       });
-
+      setUser(data);
       localStorage.setItem("userInfo", JSON.stringify(data));
       setLoading(false);
       navigate("/chats");
     } catch (error) {
-      console.log(error.response);
       toast({
         title: "Đăng nhập thất bại!",
         description: error.response.data.message,
@@ -75,7 +76,7 @@ const Login = () => {
   };
 
   return (
-    <VStack>
+    <VStack spacing={"10px"}>
       <FormControl id="login_email" isRequired>
         <FormLabel>Email</FormLabel>
         <Input

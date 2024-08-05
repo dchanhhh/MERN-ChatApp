@@ -19,15 +19,18 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [pic, setPic] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [picloading, setPicLoading] = useState(false);
   const toast = useToast();
   const navigate = useNavigate();
 
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
 
+  const [showcf, setShowcf] = useState(false);
+  const handleClickcf = () => setShowcf(!showcf);
+
   const postDetails = async (pics) => {
-    setLoading(true);
+    setPicLoading(true);
     if (pics === undefined) {
       toast({
         title: "Vui lòng chọn 1 ảnh!",
@@ -36,7 +39,7 @@ const SignUp = () => {
         isClosable: true,
         position: "bottom",
       });
-      setLoading(false);
+      setPicLoading(false);
       return;
     }
 
@@ -68,7 +71,7 @@ const SignUp = () => {
           position: "bottom",
         });
       } finally {
-        setLoading(false);
+        setPicLoading(false);
       }
     } else {
       toast({
@@ -78,13 +81,13 @@ const SignUp = () => {
         isClosable: true,
         position: "bottom",
       });
-      setLoading(false);
+      setPicLoading(false);
       return;
     }
   };
 
   const SubmitHandler = async () => {
-    setLoading(true);
+    setPicLoading(true);
     if (!name || !email || !password || !confirmPassword) {
       toast({
         title: "Vui lòng điền đầy đủ thông tin!",
@@ -93,7 +96,7 @@ const SignUp = () => {
         isClosable: true,
         position: "bottom",
       });
-      setLoading(false);
+      setPicLoading(false);
       return;
     }
 
@@ -105,9 +108,9 @@ const SignUp = () => {
         isClosable: true,
         position: "bottom",
       });
-      setLoading(false);
       return;
     }
+
     try {
       const config = {
         headers: {
@@ -120,6 +123,7 @@ const SignUp = () => {
         { name, email, password, pic },
         config
       );
+      console.log(data);
       toast({
         title: "Đăng ký thành công!",
         status: "success",
@@ -127,20 +131,19 @@ const SignUp = () => {
         isClosable: true,
         position: "bottom",
       });
-
       localStorage.setItem("userInfo", JSON.stringify(data));
-      setLoading(false);
+      setPicLoading(false);
       navigate("/chats");
     } catch (error) {
       toast({
-        title: "Đăng ký thất bại!",
+        title: "Có lỗi xảy ra!",
         description: error.response.data.message,
         status: "error",
         duration: 3000,
         isClosable: true,
         position: "bottom",
       });
-      setLoading(false);
+      setPicLoading(false);
     }
   };
 
@@ -186,10 +189,11 @@ const SignUp = () => {
           <Input
             placeholder="Nhập lại mật khẩu..."
             onChange={(e) => setConfirmPassword(e.target.value)}
+            type={showcf ? "text" : "password"}
           />
           <InputRightElement width="48px">
-            <Button h="38px" onClick={handleClick}>
-              {show ? <BiSolidHide /> : <BiSolidShow />}
+            <Button h="38px" onClick={handleClickcf}>
+              {showcf ? <BiSolidHide /> : <BiSolidShow />}
             </Button>
           </InputRightElement>
         </InputGroup>
@@ -210,7 +214,7 @@ const SignUp = () => {
         width={"100%"}
         mt={15}
         onClick={SubmitHandler}
-        isLoading={loading}
+        isLoading={picloading}
       >
         Đăng ký
       </Button>
